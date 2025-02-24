@@ -1,18 +1,27 @@
 version: "3.1"
 
 services:
-  mariadb:
-    image: mariadb:latest
-    container_name: mariadb_container
+  mysqldb:
+    image: mysql:latest
+    container_name: mysqldb
     environment:
-      MARIADB_ROOT_PASSWORD: rootdb@server
-      MARIADB_DATABASE: database
-      MARIADB_USER: root
-      MARIADB_PASSWORD: rootdb@database
+      MYSQL_ROOT_PASSWORD: rootdb@server
+      MYSQL_DATABASE: database
     ports:
       - "3306:3306"
     volumes:
-      - mariadb_data:/var/lib/mysql
+      - mydbdata:/var/lib/mysql
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    environment:
+      PMA_HOST: mysqldb
+      PMA_PORT: 3306
+      MYSQL_ROOT_PASSWORD: rootdb@server
+    ports:
+      - 8080:80
+    depends_on:
+      - mysqldb
 
 volumes:
-  mariadb_data:
+  mydbdata:
